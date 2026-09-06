@@ -1,69 +1,79 @@
-import Image from "next/image";
+import InlineBadge from "@/components/InlineBadge";
+import LinkButton from "@/components/LinkButton";
+import ReadingCard from "@/components/ReadingCard";
+import Section from "@/components/Section";
+import { getArticles } from "@/lib/notion";
 
-export default function Home() {
+/**
+ * This page now shows recent reading alongside the prose, so it depends on
+ * Notion data and needs the same daily refresh as /reading. It also bounds
+ * how stale the card's relative dates ("2 days ago") can get — see the note
+ * in lib/date.ts.
+ */
+export const revalidate = 86400;
+
+/**
+ * The About page, served at "/" — a file named `page.tsx` directly inside
+ * `src/app/` is the site root.
+ */
+export default async function AboutPage() {
+  const articles = await getArticles();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="relative mx-auto max-w-2xl">
+      <div>
+        <Section label="General">
+          <p>
+            Full-Stack Software Engineer developing AI integrated solutions in
+            fast-paced startup environments. I accelerate product lifecycles
+            from concept to production, with experience in Electric Vehicle (EV)
+            charging infrastructure and controls{" "}
+            <InlineBadge icon="bolt" />, Battery Energy Storage Systems (BESS){" "}
+            <InlineBadge icon="battery" />, Microgrid controller communication
+            interface design, electric grid services, high-throughput telemetry
+            data pipelines,
+            energy management system controls, and UI development.
           </p>
+          <p>
+            I write high-quality, observable code that minimizes cloud computing
+            expenses and accelerates time-to-resolution for production issues. I
+            collaborate with cross-functional teams to translate complex
+            requirements into efficient, reliable code.
+          </p>
+        </Section>
+
+        <Section label="Education">
+          <p>
+            With degrees in Computer and Electrical Engineering (M.Sc.),
+            Cybersecurity (M.Sc.), and MBA, from the University of Delaware,
+            where V2G technology was first pioneered and where I contributed to
+            research, I provide a multifaceted technical foundation to help shape
+            the growing landscape of clean energy technology and grid-integrated
+            mobility.
+          </p>
+        </Section>
+
+        <div className="mt-12">
+          <LinkButton href="https://www.linkedin.com/in/abushinsky/">
+            Connect on LinkedIn
+          </LinkButton>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
+
+      {/* Below `xl` this sits in the normal flow, under the prose. At `xl` it
+          lifts out to the right margin — `left-full` puts its left edge at the
+          right edge of the centred column, so the text stays centred. */}
+      {/* The gap grows with the screen: 32px at 1280, where the card already
+          sits against the container's right edge and can't move further, up to
+          96px on wide displays. `30vw - 22rem` is the line through those two
+          points; the clamp holds it there at both ends. One fluid value rather
+          than stepped breakpoints — stepping needs a custom breakpoint between
+          `xl` and `2xl`, and Tailwind sorts custom breakpoints ahead of the
+          built-in ones, so `xl:` would override it at exactly the widths that
+          need the wider gap. */}
+      <div className="mt-14 xl:absolute xl:left-full xl:top-0 xl:mt-0 xl:ml-[clamp(2rem,30vw-22rem,6rem)] xl:w-60 2xl:w-72">
+        <ReadingCard articles={articles} />
+      </div>
     </div>
   );
 }
