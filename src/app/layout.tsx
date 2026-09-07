@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 import Nav from "@/components/Nav";
 import { SITE } from "@/lib/site";
@@ -51,6 +52,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
           <main className="mt-14">{children}</main>
         </div>
+
+        {/* Vercel Web Analytics. Renders no UI — it injects a small script
+            that records page views. Cookieless, and it collects no personal
+            data, so it needs no consent banner. Only reports from the
+            deployed site; it is inert on localhost. */}
+        <Analytics />
       </body>
     </html>
   );
