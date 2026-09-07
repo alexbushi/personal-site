@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import Nav from "@/components/Nav";
-import SiteMark from "@/components/SiteMark";
+import { SITE } from "@/lib/site";
 
 import "./globals.css";
 
@@ -14,15 +14,15 @@ const geistSans = Geist({
 /**
  * `metadata` sets the browser tab title and the description search engines
  * show. `template` means a page exporting `title: "Reading"` renders as
- * "Reading · Alex Bushinsky".
+ * "Reading · <name>". All three values come from lib/site.ts, which is also
+ * what the visible header below renders.
  */
 export const metadata: Metadata = {
   title: {
-    default: "Alex Bushinsky",
-    template: "%s · Alex Bushinsky",
+    default: SITE.name,
+    template: `%s · ${SITE.name}`,
   },
-  description:
-    "Full-Stack Software Engineer developing AI integrated solutions across EV charging, battery energy storage, and grid services.",
+  description: SITE.description,
 };
 
 /**
@@ -39,15 +39,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             for the reading card to sit in the right margin. */}
         <div className="mx-auto w-full max-w-2xl px-6 py-16 sm:py-20 xl:max-w-[90rem] 2xl:max-w-[96rem]">
           <header className="flex flex-col items-center text-center">
-            <div className="mb-5">
-              <SiteMark />
-            </div>
             <h1 className="text-2xl font-semibold tracking-tight">
-              Alex Bushinsky
+              {SITE.name}
             </h1>
-            <p className="mt-1.5 text-sm text-neutral-500">
-              Full-Stack Software Engineer
-            </p>
+            <p className="mt-1.5 text-sm text-neutral-500">{SITE.role}</p>
           </header>
 
           <div className="mt-8 flex justify-center">

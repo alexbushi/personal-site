@@ -4,21 +4,21 @@ import { formatDate } from "@/lib/date";
 
 /** One entry in the reading timeline. */
 export default function ArticleRow({ article }: { article: Article }) {
-  // e.g. "Aug 28, 2026 · IEEE Spectrum" — either half may be missing.
-  const meta = [formatDate(article.dateSaved), article.source]
-    .filter(Boolean)
-    .join(" · ");
-
   return (
-    <TimelineItem meta={meta}>
-      <a
-        href={article.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-0.5 block text-[15px] text-neutral-900 underline-offset-4 hover:underline"
-      >
-        {article.title}
-      </a>
+    <TimelineItem meta={formatDate(article.dateSaved)}>
+      {/* A row with no URL still shows its title, just not as a link. */}
+      {article.url ? (
+        <a
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-0.5 block text-[15px] text-neutral-900 underline-offset-4 hover:underline"
+        >
+          {article.title}
+        </a>
+      ) : (
+        <p className="mt-0.5 text-[15px] text-neutral-900">{article.title}</p>
+      )}
 
       {article.note && (
         <p className="mt-1.5 text-sm leading-6 text-neutral-600">{article.note}</p>

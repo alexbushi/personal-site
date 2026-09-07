@@ -26,26 +26,37 @@
  */
 const ICONS = {
   bolt: {
-    size: "h-[0.74em] w-[0.74em]",
+    size: "h-[0.94em] w-[0.94em]",
     glyph: <path d="M13 2 3 14h7l-1 8 10-12h-7z" />,
   },
   // Portrait battery: terminal on top, charge level filling from the bottom.
   battery: {
-    size: "h-[0.82em] w-[0.82em]",
+    // The svg fills the tile, so padding is baked into the geometry. The drawn
+    // extent is x 7-17 and y 4-20, centred on (12, 12), so the margin is even
+    // left-to-right and top-to-bottom.
+    //
+    // The side margin is larger than the top and bottom one, and that is on
+    // purpose: the body is deliberately taller than it is wide, because that
+    // proportion is what makes the shape read as a battery. Squaring it up to
+    // equalise all four margins turns it into a rounded box with a bump.
+    //
+    // Stroked rects are inset by half the stroke width, since a stroke
+    // straddles its path rather than sitting inside it.
+    size: "h-[1.28em] w-[1.28em]",
     glyph: (
       <>
-        <rect x="9.8" y="1.6" width="4.4" height="2.6" rx="1.2" />
+        <rect x="9.9" y="4" width="4.2" height="2.1" rx="1.05" />
         <rect
-          x="6.4"
-          y="5.2"
-          width="11.2"
-          height="17.2"
-          rx="3.2"
+          x="8.1"
+          y="8"
+          width="7.8"
+          height="10.9"
+          rx="2.5"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2.4"
+          strokeWidth="2.2"
         />
-        <rect x="9.4" y="13.2" width="5.2" height="6.6" rx="1.4" />
+        <rect x="9.9" y="13.5" width="4.2" height="5.4" rx="1.2" />
       </>
     ),
   },
@@ -59,7 +70,7 @@ export default function InlineBadge({ icon }: { icon: BadgeIcon }) {
   return (
     <span
       aria-hidden="true"
-      className="inline-flex h-[1.05em] w-[1.05em] items-center justify-center rounded-[0.28em] bg-neutral-900 align-[-0.05em]"
+      className="inline-flex h-[1.28em] w-[1.28em] items-center justify-center rounded-[0.34em] bg-neutral-900 align-[-0.16em]"
     >
       <svg viewBox="0 0 24 24" fill="currentColor" className={`${size} text-accent`}>
         {glyph}

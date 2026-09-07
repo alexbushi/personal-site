@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Matches InlineBadge: neutral-900 tile, accent-green bolt.
+       The bolt path is the same one used in src/components/InlineBadge.tsx.
+       It natively spans x 3-20 / y 2-22, so the transform scales it to 0.875
+       and recentres it on (12, 12) to sit evenly inside the tile. -->
+  <rect width="24" height="24" rx="5.5" fill="#171717"/>
+  <g transform="translate(1.94 1.5) scale(0.875)">
+    <path d="M13 2 3 14h7l-1 8 10-12h-7z" fill="#25c63c"/>
+  </g>
+</svg>

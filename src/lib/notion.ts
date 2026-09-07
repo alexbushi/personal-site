@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
+import { cacheLife, cacheTag } from "next/cache";
 
-import { PLACEHOLDER_ARTICLES, type Article } from "./articles";
+import { type Article } from "./articles";
 
 /**
  * Pin the Notion API version explicitly.
@@ -18,7 +19,6 @@ const NOTION_VERSION = "2026-03-11";
 const PROPERTY = {
   title: "Title",
   url: "URL",
-  source: "Source",
   dateSaved: "Date Saved",
   tags: "Tags",
   note: "Note",
@@ -62,11 +62,6 @@ function readUrl(property: unknown): string {
   return typeof url === "string" ? url : "";
 }
 
-function readSelect(property: unknown): string {
-  const name = asRecord(asRecord(property)?.select)?.name;
-  return typeof name === "string" ? name : "";
-}
-
 function readMultiSelect(property: unknown): string[] {
   const options = asRecord(property)?.multi_select;
   if (!Array.isArray(options)) return [];
@@ -89,17 +84,24 @@ function readDateStart(property: unknown): string | null {
 /**
  * Fetches saved articles from Notion, newest first.
  *
- * Falls back to placeholder data when the environment variables are absent,
- * which is what lets the site run before the Notion database exists. On an
- * API failure it returns an empty array so the page shows its empty state
- * rather than a 500.
+ * Returns an empty list rather than throwing in the two cases that would
+ * otherwise break the page: missing environment variables, and an API failure.
+ * Either way the page renders its empty state instead of a 500, and the reason
+ * is logged to the server console.
  */
 export async function getArticles(): Promise<Article[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("articles");
+
   const auth = process.env.NOTION_TOKEN;
   const dataSourceId = process.env.NOTION_DATA_SOURCE_ID;
 
   if (!auth || !dataSourceId) {
-    return PLACEHOLDER_ARTICLES;
+    console.warn(
+      "[notion] NOTION_TOKEN or NOTION_DATA_SOURCE_ID missing — reading list will be empty.",
+    );
+    return [];
   }
 
   try {
@@ -127,14 +129,14 @@ export async function getArticles(): Promise<Article[]> {
           id: typeof id === "string" ? id : `row-${index}`,
           title: readText(properties[PROPERTY.title]),
           url: readUrl(properties[PROPERTY.url]),
-          source: readSelect(properties[PROPERTY.source]),
           dateSaved: readDateStart(properties[PROPERTY.dateSaved]),
           tags: readMultiSelect(properties[PROPERTY.tags]),
           note: readText(properties[PROPERTY.note]),
         };
       })
-      // A row with no title or no link has nothing to render or point at.
-      .filter((article) => article.title !== "" && article.url !== "");
+      // A row with no title has nothing to render. A row with no URL still
+      // does — it renders as plain, unclickable text.
+      .filter((article) => article.title !== "");
   } catch (error) {
     console.error("[notion] Failed to load articles:", error);
     return [];

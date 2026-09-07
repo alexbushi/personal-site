@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 
 import { Timeline, TimelineItem } from "@/components/Timeline";
 import type { Article } from "@/lib/articles";
@@ -12,7 +13,14 @@ const MAX_ITEMS = 4;
  * Entry titles link out to the article itself; the footer link goes to the
  * full reading list.
  */
-export default function ReadingCard({ articles }: { articles: Article[] }) {
+export default async function ReadingCard({ articles }: { articles: Article[] }) {
+  // `formatRelative` below reads the clock, which Cache Components treats as an
+  // unstable value during prerendering. Caching this component pins "now" to
+  // the moment the cache entry was made, so every viewer sees the same
+  // "9 days ago" until it revalidates alongside the data.
+  "use cache";
+  cacheLife("days");
+
   // Nothing worth showing an empty box for — the card just disappears.
   if (articles.length === 0) return null;
 
@@ -29,14 +37,20 @@ export default function ReadingCard({ articles }: { articles: Article[] }) {
             meta={formatRelative(article.dateSaved)}
             gap="tight"
           >
-            <a
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-0.5 block text-sm leading-snug text-neutral-800 underline-offset-4 hover:underline"
-            >
-              {article.title}
-            </a>
+            {article.url ? (
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-0.5 block text-sm leading-snug text-neutral-800 underline-offset-4 hover:underline"
+              >
+                {article.title}
+              </a>
+            ) : (
+              <p className="mt-0.5 text-sm leading-snug text-neutral-800">
+                {article.title}
+              </p>
+            )}
           </TimelineItem>
         ))}
       </Timeline>

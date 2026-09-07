@@ -5,14 +5,6 @@ import Section from "@/components/Section";
 import { getArticles } from "@/lib/notion";
 
 /**
- * This page now shows recent reading alongside the prose, so it depends on
- * Notion data and needs the same daily refresh as /reading. It also bounds
- * how stale the card's relative dates ("2 days ago") can get — see the note
- * in lib/date.ts.
- */
-export const revalidate = 86400;
-
-/**
  * The About page, served at "/" — a file named `page.tsx` directly inside
  * `src/app/` is the site root.
  */
@@ -28,11 +20,12 @@ export default async function AboutPage() {
             fast-paced startup environments. I accelerate product lifecycles
             from concept to production, with experience in Electric Vehicle (EV)
             charging infrastructure and controls{" "}
-            <InlineBadge icon="bolt" />, Battery Energy Storage Systems (BESS){" "}
+            <InlineBadge icon="bolt" />, Vehicle to Grid (V2G) technology, Battery Energy Storage Systems (BESS){" "}
             <InlineBadge icon="battery" />, Microgrid controller communication
-            interface design, electric grid services, high-throughput telemetry
+            interface design, electric grid services, energy markets, high-throughput telemetry
             data pipelines,
-            energy management system controls, and UI development.
+            energy management system controls, data modeling, UI development, and 
+            AI/LLM APIs and integrating them into production applications.
           </p>
           <p>
             I write high-quality, observable code that minimizes cloud computing
@@ -44,12 +37,11 @@ export default async function AboutPage() {
 
         <Section label="Education">
           <p>
-            With degrees in Computer and Electrical Engineering (M.Sc.),
+            With three Masters degrees - Computer and Electrical Engineering (M.Sc.),
             Cybersecurity (M.Sc.), and MBA, from the University of Delaware,
             where V2G technology was first pioneered and where I contributed to
             research, I provide a multifaceted technical foundation to help shape
-            the growing landscape of clean energy technology and grid-integrated
-            mobility.
+            the growing landscape of clean energy and AI-integrated technology.
           </p>
         </Section>
 

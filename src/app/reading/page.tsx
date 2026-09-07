@@ -5,20 +5,6 @@ import Section from "@/components/Section";
 import { Timeline } from "@/components/Timeline";
 import { getArticles } from "@/lib/notion";
 
-/**
- * The daily pull, in one line.
- *
- * Next.js renders this page to static HTML and serves that same HTML to every
- * visitor instantly, re-running `getArticles()` at most once per 86400 seconds
- * (24 hours). No cron job, no scheduler, no cache service. The first visitor
- * after the 24-hour mark gets the slightly stale page and triggers a refresh
- * in the background; everyone after that gets fresh data.
- *
- * The value has to be a literal number — Next.js reads it statically, so
- * `60 * 60 * 24` would not work here.
- */
-export const revalidate = 86400;
-
 export const metadata: Metadata = {
   title: "Reading",
   description: "Articles I have been saving.",
@@ -40,10 +26,9 @@ export default async function ReadingPage() {
     <div className="mx-auto w-full max-w-xl">
       <Section label="What I'm Reading">
         <p>
-          AI is changing software engineering fast, and most of the writing
-          about it is noise. These are the most useful articles and videos
-          I&apos;ve found &mdash; no hype, just the material I&apos;ve actually
-          used to integrate AI into my own work.
+          AI is changing software engineering fast. These are the most useful articles and videos
+          I&apos;ve found. No hype, just the material I&apos;ve actually
+          used to integrate AI into my own work. Plus some other useful career adjacent items.
         </p>
 
         {articles.length === 0 ? (
