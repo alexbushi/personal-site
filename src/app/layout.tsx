@@ -19,11 +19,36 @@ const geistSans = Geist({
  * what the visible header below renders.
  */
 export const metadata: Metadata = {
+  /**
+   * `metadataBase` is the origin Next.js resolves relative metadata URLs
+   * against. Without it, the generated Open Graph image URL stays relative,
+   * and crawlers like LinkedIn's cannot fetch it — the preview falls back to
+   * a bare link.
+   */
+  metadataBase: new URL(SITE.url),
   title: {
     default: SITE.name,
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
+  // Tells search engines which hostname to index, so the apex and www aren't
+  // treated as two competing copies of the same site.
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "profile",
+    siteName: SITE.name,
+    // Same template as the page title, so /reading gets "Reading · <name>"
+    // in its Open Graph tags rather than inheriting the site-wide title.
+    title: { default: SITE.name, template: `%s · ${SITE.name}` },
+    description: SITE.description,
+    url: SITE.url,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: { default: SITE.name, template: `%s · ${SITE.name}` },
+    description: SITE.description,
+  },
 };
 
 /**
