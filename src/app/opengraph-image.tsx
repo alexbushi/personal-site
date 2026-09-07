@@ -9,8 +9,14 @@ import { SITE } from "@/lib/site";
  * The image link previews show — LinkedIn, Slack, iMessage, X.
  *
  * Generated at build time rather than shipped as a static file, so it stays in
- * sync with lib/site.ts automatically. 1200x630 is the size every platform
- * crops from; anything smaller gets upscaled and looks soft.
+ * sync with lib/site.ts automatically.
+ *
+ * Rendered at 2x the 1200x630 nominal size. 1200x630 is the aspect every
+ * platform crops to, but on a high-DPI screen an image displayed at its own
+ * pixel size is drawn across twice as many physical pixels and upscaled, which
+ * reads as soft. Rendering at 2400x1260 means it downscales rather than
+ * upscales, which always looks sharper. Every measurement below is multiplied
+ * by SCALE so the layout stays identical.
  *
  * Rendered by Satori, which supports only a subset of CSS — flexbox and
  * absolute positioning, no grid — hence the explicit `display: flex`
@@ -27,7 +33,11 @@ const [geistRegular, geistSemiBold] = await Promise.all([
   readFile(join(process.cwd(), "assets/fonts/Geist-SemiBold.ttf")),
 ]);
 export const alt = `${SITE.name} — ${SITE.role}`;
-export const size = { width: 1200, height: 630 };
+
+const SCALE = 2;
+const px = (n: number) => n * SCALE;
+
+export const size = { width: px(1200), height: px(630) };
 export const contentType = "image/png";
 
 /**
@@ -58,7 +68,7 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          padding: "0 96px",
+          padding: `0 ${px(96)}px`,
           background: "#ffffff",
           fontFamily: "Geist",
         }}
@@ -69,23 +79,23 @@ export default function OpenGraphImage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: 88,
-            height: 88,
-            borderRadius: 24,
+            width: px(88),
+            height: px(88),
+            borderRadius: px(24),
             background: "#171717",
-            marginBottom: 48,
+            marginBottom: px(48),
           }}
         >
-          <svg width="56" height="56" viewBox="0 0 24 24" fill="#25c63c">
+          <svg width={px(56)} height={px(56)} viewBox="0 0 24 24" fill="#25c63c">
             <path d="M13 2 3 14h7l-1 8 10-12h-7z" />
           </svg>
         </div>
 
         <Words
           text={SITE.name}
-          gap={13}
+          gap={px(13)}
           style={{
-            fontSize: 72,
+            fontSize: px(72),
             fontWeight: 600,
             color: "#171717",
             // Matches `tracking-tight` on the site's <h1>.
@@ -94,15 +104,15 @@ export default function OpenGraphImage() {
         />
         <Words
           text={SITE.role}
-          gap={7}
-          style={{ fontSize: 34, color: "#737373", marginTop: 16 }}
+          gap={px(7)}
+          style={{ fontSize: px(34), color: "#737373", marginTop: px(16) }}
         />
 
         <div
           style={{
             display: "flex",
-            marginTop: 56,
-            fontSize: 26,
+            marginTop: px(56),
+            fontSize: px(26),
             color: "#a3a3a3",
           }}
         >
