@@ -5,9 +5,17 @@ import Section from "@/components/Section";
 import { Timeline } from "@/components/Timeline";
 import { getArticles } from "@/lib/notion";
 
+const TITLE = "Reading";
+const DESCRIPTION = "Articles and videos I have been saving.";
+
 export const metadata: Metadata = {
-  title: "Reading",
-  description: "Articles I have been saving.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/reading" },
+  // Next.js does not copy a page's `title` into its Open Graph tags, so a page
+  // that wants its own link preview has to say so explicitly.
+  openGraph: { title: TITLE, description: DESCRIPTION, url: "/reading" },
+  twitter: { title: TITLE, description: DESCRIPTION },
 };
 
 /**

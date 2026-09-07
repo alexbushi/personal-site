@@ -11,6 +11,13 @@
  * hand: when the About text changes meaningfully, update this line too.
  */
 export const SITE = {
+  /**
+   * Canonical origin. The apex is canonical and `www` redirects to it, so this
+   * is the bare domain. If that ever flips, change it here — every absolute URL
+   * in the metadata is derived from this value, and pointing it at a hostname
+   * that redirects makes crawlers follow a hop to reach the real page.
+   */
+  url: "https://abushinsky.com",
   name: "Alexander Bushinsky",
   role: "Full-Stack Software Engineer",
   description:
