@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 
-import Nav from "@/components/Nav";
 import { SITE } from "@/lib/site";
 
 import "./globals.css";
@@ -71,11 +70,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <p className="mt-1.5 text-sm text-neutral-500">{SITE.role}</p>
           </header>
 
-          <div className="mt-8 flex justify-center">
-            <Nav />
-          </div>
-
-          <main className="mt-14">{children}</main>
+          {/* Each page renders its own <Nav current=… />, because a layout has
+              no way to know which route is active. */}
+          <main>{children}</main>
         </div>
 
         {/* Vercel Web Analytics. Renders no UI — it injects a small script
